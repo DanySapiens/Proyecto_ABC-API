@@ -27,7 +27,7 @@ def obtenerEmpleado(id):
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500
     
-@empleados.route('/agregar', methods=['POST']) #endpoint para traer toda la info de un empleado por su ID=numero de empleado
+@empleados.route('/agregar', methods=['POST']) #endpoint agregar un empleado a la base de datos
 def agregarEmpleado():
     try:
         opcion=request.json['opcion']
