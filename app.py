@@ -24,7 +24,7 @@ app.register_blueprint(empleados.empleados, url_prefix = '/empleados/')
 app.register_blueprint(puestos.puestos, url_prefix = '/puestos/')
 
 if __name__ == '__main__':
-    app.run() #manda a ejecutar la API 
+    app.run(debug=True) #manda a ejecutar la API 
 #*****************************************************
 
 

@@ -15,7 +15,7 @@ def home(): #define una funcion de nombre home
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500
 
-@empleados.route('/obtener', methods=['GET']) #endpoint para traer toda la info de un empleado por su numero de empleado o numempl = 0 para todos
+@empleados.route('/obtener', methods=['GET']) #endpoint para traer toda la info de un empleado activo por su numero de empleado o numempl = 0 para todos
 def obtenerEmpleado(): 
     try:
         opcion=request.json['opcion']
@@ -54,4 +54,41 @@ def agregarEmpleado():
         return jsonify({'mensage':'{0}'.format(resultado)}),200
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500    
+    
+@empleados.route('/modificar', methods=['PUT']) #endpoint para modificar la informacion de un empleado
+def modificarEmpleado():
+    try:
+        opcion=request.json['opcion']
+        numempleado=request.json['numempleado']
+        direccion=request.json['direccion']
+        codigopostal=request.json['codigopostal']
+        telefono=request.json['telefono']
+        curp=request.json['curp']
+        nss=request.json['nss']
+        descripcionpuesto=request.json['descripcionpuesto']
+        
+        resultado=[]
+        conn=conexion()
+        conn.conectar()
+        resultado=conn.ejecutarquery(f"select * from fnoperacionesempleados({opcion},{numempleado},'','','','{direccion}','{codigopostal}','{telefono}','{curp}','{nss}',{descripcionpuesto},'');")
+        conn.cerrar()
+        return jsonify({'mensage':'{0}'.format(resultado)}),200
+    except Exception as ex:
+        return jsonify({'mensage':str(ex)}),500   
+    
+@empleados.route('/baja', methods=['PUT']) #endpoint para dar de baja a un empleado
+def bajaEmpleado():
+    try:
+        opcion=request.json['opcion']
+        numempleado=request.json['numempleado']
+        causabaja=request.json['causabaja']
+      
+        resultado=[]
+        conn=conexion()
+        conn.conectar()
+        resultado=conn.ejecutarquery(f"select * from fnoperacionesempleados({opcion},{numempleado},'','','','','','','','',0,'{causabaja}');")
+        conn.cerrar()
+        return jsonify({'mensage':'{0}'.format(resultado)}),200
+    except Exception as ex:
+        return jsonify({'mensage':str(ex)}),500  
     
