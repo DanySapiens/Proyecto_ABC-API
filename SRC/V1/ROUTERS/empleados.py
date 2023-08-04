@@ -15,13 +15,17 @@ def home(): #define una funcion de nombre home
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500
 
-@empleados.route('/obtener/<id>', methods=['GET']) #endpoint para traer toda la info de un empleado por su ID=numero de empleado
-def obtenerEmpleado(id): 
+@empleados.route('/obtener', methods=['GET']) #endpoint para traer toda la info de un empleado por su numero de empleado o numempl = 0 para todos
+def obtenerEmpleado(): 
     try:
+        opcion=request.json['opcion']
+        numeroempleado=request.json['numeroempleado']
+        
         resultado=[]
         conn=conexion()
         conn.conectar()
-        resultado=conn.ejecutarquery(f"select * from tbcatempleadosprueba where numeroempleado = {id}")
+        resultado=conn.ejecutarquery(f"select * from fnoperacionesempleados({opcion},{numeroempleado},'','','','','','','','',0,'');")
+        # resultado=conn.ejecutarquery(f"select * from tbcatempleadosprueba where numeroempleado = {id}")
         conn.cerrar()
         return jsonify({'mensage':'{0}'.format(resultado)}),200
     except Exception as ex:

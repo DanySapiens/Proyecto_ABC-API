@@ -14,20 +14,23 @@ def home(): #define una funcion de nombre home
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500
 
-@puestos.route('/obtener/<id>', methods=['GET']) #endpoint para traer toda la info de un puesto por su id
-def obtenerEmpleado(id): 
+@puestos.route('/obtener', methods=['GET']) #endpoint para traer toda la info de un puesto por su id o varios con id= -1
+def obtenerPuesto(): 
     try:
+        opcion=request.json['opcion']
+        idpuesto=request.json['idpuesto']
+        
         resultado=[]
         conn=conexion()
         conn.conectar()
-        resultado=conn.ejecutarquery(f"select * from tbcatpuestosprueba where idpuesto = {id}")
+        resultado=conn.ejecutarquery(f"select * from fnoperacionespuestos({opcion},{idpuesto},'',0,0);")
         conn.cerrar()
         return jsonify({'mensage':'{0}'.format(resultado)}),200
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500
 
 @puestos.route('/agregar', methods=['POST']) #endpoint para agregar un puesto a la base de datos
-def agregarEmpleado():
+def agregarPuesto():
     try:
         opcion=request.json['opcion']
         idpuesto=request.json['idpuesto']
