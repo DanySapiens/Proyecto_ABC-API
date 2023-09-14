@@ -9,13 +9,12 @@ def home(): #define una funcion de nombre home
         conn=conexion()
         conn.conectar()
         resultado=conn.ejecutarquery("select * from tbcatempleadosprueba")
-       # resultado=conn.ejecutarquery("select * from tbcatpuestosprueba")
         conn.cerrar()
         return jsonify({'mensage':'{0}'.format(resultado)}),200
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500
 
-@empleados.route('/obtener', methods=['GET']) #endpoint para traer toda la info de un empleado activo por su numero de empleado o numempl = 0 para todos
+@empleados.route('/obtener', methods=['POST']) #endpoint para traer toda la info de un empleado activo por su numero de empleado o numempl = 0 para todos
 def obtenerEmpleado(): 
     try:
         opcion=request.json['opcion']
@@ -27,7 +26,20 @@ def obtenerEmpleado():
         resultado=conn.ejecutarquery(f"select * from fnoperacionesempleados({opcion},{numeroempleado},'','','','','','','','',0,'');")
         # resultado=conn.ejecutarquery(f"select * from tbcatempleadosprueba where numeroempleado = {id}")
         conn.cerrar()
-        return jsonify({'mensage':'{0}'.format(resultado)}),200
+        return jsonify({
+                        "tnumempleado":resultado[0].tnumempleado,
+                        "tnombre":resultado[1],
+                        "tappaterno":resultado[0],
+                        "tapmaterno":resultado[0],
+                        "tdireccion":resultado[0],
+                        "tcodigopostal":resultado[0],
+                        "ttelefono":resultado[0],
+                        "tcurp":resultado[0],
+                        "tnss":resultado[0],
+                        "tdescripcionpuesto":resultado[0],
+                        "testatus":resultado[0],
+                        "tmensaje":resultado[0]
+                    }),200
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500
     

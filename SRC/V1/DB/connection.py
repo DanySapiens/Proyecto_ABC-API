@@ -1,6 +1,6 @@
 import psycopg2
 
-class conexion():
+class conexion(): #conexion a la base de datos
     
     conn=None
 
