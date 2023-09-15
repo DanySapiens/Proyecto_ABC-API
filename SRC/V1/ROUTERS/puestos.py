@@ -14,18 +14,27 @@ def home(): #define una funcion de nombre home
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500
 
-@puestos.route('/obtener', methods=['GET']) #endpoint para traer toda la info de un puesto activo por su id o varios con id= -1
+@puestos.route('/obtener', methods=['POST']) #endpoint para traer toda la info de un puesto activo por su id o varios con id= -1
 def obtenerPuesto(): 
     try:
         opcion=request.json['opcion']
         idpuesto=request.json['idpuesto']
         
+        retorno=[]
         resultado=[]
         conn=conexion()
         conn.conectar()
         resultado=conn.ejecutarquery(f"select * from fnoperacionespuestos({opcion},{idpuesto},'',0,0);")
         conn.cerrar()
-        return jsonify({'mensage':'{0}'.format(resultado)}),200
+    
+        for row in resultado:
+            retorno.append({
+                    "tidpuesto":row[0],
+                    "tdescripcion":row[1],
+                    "testatus":row[2],
+                    "tmensaje":row[3]
+                    })
+        return jsonify(retorno),200
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500
 

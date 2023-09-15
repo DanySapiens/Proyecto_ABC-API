@@ -19,35 +19,36 @@ def obtenerEmpleado():
     try:
         opcion=request.json['opcion']
         numeroempleado=request.json['numeroempleado']
-        
+        retorno=[]
         resultado=[]
         conn=conexion()
         conn.conectar()
         resultado=conn.ejecutarquery(f"select * from fnoperacionesempleados({opcion},{numeroempleado},'','','','','','','','',0,'');")
-        # resultado=conn.ejecutarquery(f"select * from tbcatempleadosprueba where numeroempleado = {id}")
         conn.cerrar()
-        return jsonify({
-                        "tnumempleado":resultado[0].tnumempleado,
-                        "tnombre":resultado[1],
-                        "tappaterno":resultado[0],
-                        "tapmaterno":resultado[0],
-                        "tdireccion":resultado[0],
-                        "tcodigopostal":resultado[0],
-                        "ttelefono":resultado[0],
-                        "tcurp":resultado[0],
-                        "tnss":resultado[0],
-                        "tdescripcionpuesto":resultado[0],
-                        "testatus":resultado[0],
-                        "tmensaje":resultado[0]
-                    }),200
+        for row in resultado:
+            retorno.append({
+                        "tnumempleado":row[0],
+                        "tnombre":row[1],
+                        "tappaterno":row[2],
+                        "tapmaterno":row[3],
+                        "tdireccion":row[4],
+                        "tcodigopostal":row[5],
+                        "ttelefono":row[6],
+                        "tcurp":row[7],
+                        "tnss":row[8],
+                        "tdescripcionpuesto":row[9],
+                        "testatus":row[10],
+                        "tmensaje":row[11]
+                    })
+        return jsonify(retorno),200 #200 success
     except Exception as ex:
-        return jsonify({'mensage':str(ex)}),500
+        return jsonify({'mensage':str(ex)}),500 #error
     
 @empleados.route('/agregar', methods=['POST']) #endpoint agregar un empleado a la base de datos
 def agregarEmpleado():
     try:
         opcion=request.json['opcion']
-        numempleado=request.json['numempleado']
+        numempleado=request.json['numeroempleado']
         nombre=request.json['nombre']
         apellidopaterno=request.json['apellidopaterno']
         apellidomaterno=request.json['apellidomaterno']
@@ -58,12 +59,29 @@ def agregarEmpleado():
         nss=request.json['nss']
         descripcionpuesto=request.json['descripcionpuesto']
         
+        retorno=[]
         resultado=[]
         conn=conexion()
         conn.conectar()
         resultado=conn.ejecutarquery(f"select * from fnoperacionesempleados({opcion},{numempleado},'{nombre}','{apellidopaterno}','{apellidomaterno}','{direccion}','{codigopostal}','{telefono}','{curp}','{nss}',{descripcionpuesto},'');")
         conn.cerrar()
-        return jsonify({'mensage':'{0}'.format(resultado)}),200
+        
+        for row in resultado:
+            retorno.append({ #retornos de la funcion
+                        "tnumempleado":row[0],
+                        "tnombre":row[1],
+                        "tappaterno":row[2],
+                        "tapmaterno":row[3],
+                        "tdireccion":row[4],
+                        "tcodigopostal":row[5],
+                        "ttelefono":row[6],
+                        "tcurp":row[7],
+                        "tnss":row[8],
+                        "tdescripcionpuesto":row[9],
+                        "testatus":row[10],
+                        "tmensaje":row[11]
+                    })
+        return jsonify(retorno),200
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500    
     
@@ -71,7 +89,7 @@ def agregarEmpleado():
 def modificarEmpleado():
     try:
         opcion=request.json['opcion']
-        numempleado=request.json['numempleado']
+        numempleado=request.json['numeroempleado']
         direccion=request.json['direccion']
         codigopostal=request.json['codigopostal']
         telefono=request.json['telefono']
@@ -92,7 +110,7 @@ def modificarEmpleado():
 def bajaEmpleado():
     try:
         opcion=request.json['opcion']
-        numempleado=request.json['numempleado']
+        numempleado=request.json['numeroempleado']
         causabaja=request.json['causabaja']
       
         resultado=[]
