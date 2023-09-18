@@ -46,12 +46,22 @@ def agregarPuesto():
         descripcion=request.json['descripcion']
         empleadoalta=request.json['empleadoalta']
         
+        retorno = []
         resultado=[]
         conn=conexion()
         conn.conectar()
         resultado=conn.ejecutarquery(f"select * from fnoperacionespuestos({opcion},{idpuesto},'{descripcion}',{empleadoalta},0);")
         conn.cerrar()
-        return jsonify({'mensage':'{0}'.format(resultado)}),200
+        
+        for row in resultado:
+            retorno.append({
+                    "tidpuesto":row[0],
+                    "tdescripcion":row[1],
+                    "testatus":row[2],
+                    "tmensaje":row[3]
+                    })
+        return jsonify(retorno),200
+        
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500    
 
@@ -62,12 +72,21 @@ def modificarPuesto():
         idpuesto=request.json['idpuesto']
         descripcion=request.json['descripcion']
         
+        retorno = []
         resultado=[]
         conn=conexion()
         conn.conectar()
         resultado=conn.ejecutarquery(f"select * from fnoperacionespuestos({opcion},{idpuesto},'{descripcion}',0,0);")
         conn.cerrar()
-        return jsonify({'mensage':'{0}'.format(resultado)}),200
+        
+        for row in resultado:
+            retorno.append({
+                    "tidpuesto":row[0],
+                    "tdescripcion":row[1],
+                    "testatus":row[2],
+                    "tmensaje":row[3]
+                    })
+        return jsonify(retorno),200
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500  
     
@@ -78,11 +97,21 @@ def bajaPuesto():
         idpuesto=request.json['idpuesto']
         empleadobaja=request.json['empleadobaja']
         
+        retorno = []
         resultado=[]
         conn=conexion()
         conn.conectar()
         resultado=conn.ejecutarquery(f"select * from fnoperacionespuestos({opcion},{idpuesto},'',0,{empleadobaja});")
         conn.cerrar()
-        return jsonify({'mensage':'{0}'.format(resultado)}),200
+        
+        for row in resultado:
+            retorno.append({
+                    "tidpuesto":row[0],
+                    "tdescripcion":row[1],
+                    "testatus":row[2],
+                    "tmensaje":row[3]
+                    })
+        return jsonify(retorno),200
+        
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500  

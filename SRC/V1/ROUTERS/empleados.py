@@ -42,7 +42,7 @@ def obtenerEmpleado():
                     })
         return jsonify(retorno),200 #200 success
     except Exception as ex:
-        return jsonify({'mensage':str(ex)}),500 #error
+        return jsonify({'mensage':str(ex)}),500 #500 error
     
 @empleados.route('/agregar', methods=['POST']) #endpoint agregar un empleado a la base de datos
 def agregarEmpleado():
@@ -97,12 +97,30 @@ def modificarEmpleado():
         nss=request.json['nss']
         descripcionpuesto=request.json['descripcionpuesto']
         
+        retorno = []
         resultado=[]
         conn=conexion()
         conn.conectar()
         resultado=conn.ejecutarquery(f"select * from fnoperacionesempleados({opcion},{numempleado},'','','','{direccion}','{codigopostal}','{telefono}','{curp}','{nss}',{descripcionpuesto},'');")
         conn.cerrar()
-        return jsonify({'mensage':'{0}'.format(resultado)}),200
+        
+        for row in resultado:
+           retorno.append({ #retornos de la funcion
+                       "tnumempleado":row[0],
+                       "tnombre":row[1],
+                       "tappaterno":row[2],
+                       "tapmaterno":row[3],
+                       "tdireccion":row[4],
+                       "tcodigopostal":row[5],
+                       "ttelefono":row[6],
+                       "tcurp":row[7],
+                       "tnss":row[8],
+                       "tdescripcionpuesto":row[9],
+                       "testatus":row[10],
+                       "tmensaje":row[11]
+                   })
+        
+        return jsonify(retorno),200
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500   
     
@@ -113,12 +131,30 @@ def bajaEmpleado():
         numempleado=request.json['numeroempleado']
         causabaja=request.json['causabaja']
       
+        retorno = []
         resultado=[]
         conn=conexion()
         conn.conectar()
         resultado=conn.ejecutarquery(f"select * from fnoperacionesempleados({opcion},{numempleado},'','','','','','','','',0,'{causabaja}');")
         conn.cerrar()
-        return jsonify({'mensage':'{0}'.format(resultado)}),200
+        
+        for row in resultado:
+            retorno.append({ #retornos de la funcion
+                        "tnumempleado":row[0],
+                        "tnombre":row[1],
+                        "tappaterno":row[2],
+                        "tapmaterno":row[3],
+                        "tdireccion":row[4],
+                        "tcodigopostal":row[5],
+                        "ttelefono":row[6],
+                        "tcurp":row[7],
+                        "tnss":row[8],
+                        "tdescripcionpuesto":row[9],
+                        "testatus":row[10],
+                        "tmensaje":row[11]
+                    })
+        
+        return jsonify(retorno),200
     except Exception as ex:
         return jsonify({'mensage':str(ex)}),500  
     
